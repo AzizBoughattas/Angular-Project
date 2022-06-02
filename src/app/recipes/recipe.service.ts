@@ -1,16 +1,19 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { Subject, Subscription } from 'rxjs';
 import { Ingredient } from '../shared/ingredient.model';
-import { ShoppingListService } from '../shopping-list/shopping-list.service';
+// import { ShoppingListService } from '../shopping-list/shopping-list.service';
 import { Recipe } from './recipe.model';
+import * as ShoppingListActions from '../shopping-list/store/shopping-list.actions'
+import * as fromApp from '../store/app.reducer'
 
 @Injectable()
 export class RecipeService {
 
   recipesChanged = new Subject<Recipe[]>()
 
-  constructor(private shoppingListService : ShoppingListService , private route : ActivatedRoute) { }
+  constructor( private route : ActivatedRoute , private store : Store<fromApp.AppState>) { }
 
 //  private recipes: Recipe[] = [
 //     new Recipe('Tasty Burger','a super tasty BURGER BITCHESS',
@@ -39,7 +42,8 @@ private recipes : Recipe[] = []
   }
 
   addIngredientsToShoppingList(ingredients : Ingredient[]) {
-    this.shoppingListService.addIngredients(ingredients);
+   // this.shoppingListService.addIngredients(ingredients);
+   this.store.dispatch(new ShoppingListActions.AddIngredients(ingredients))
   }
 
   getRecipeUrl (id : number) {
